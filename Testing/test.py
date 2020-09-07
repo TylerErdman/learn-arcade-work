@@ -1,2 +1,6 @@
-print("It was a dark and stormy night.")
-print("Suddenly a shot rang out!")
+def g():
+    my_value = 22
+
+
+g()
+print(my_value)
