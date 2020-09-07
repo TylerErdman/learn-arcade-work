@@ -20,7 +20,6 @@ arcade.draw_arc_outline(250, 40, 750, 750, arcade.color.YELLOW, 0, 180, 30)
 arcade.draw_arc_outline(250, 50, 750, 750, arcade.color.ORANGE, 0, 180, 30)
 arcade.draw_arc_outline(250, 60, 750, 750, arcade.color.RED, 0, 180, 30)
 
-
 # Then I draw the sun
 arcade.draw_circle_filled(325, 350, 50, arcade.color.YELLOW)
 
@@ -41,7 +40,6 @@ arcade.draw_lrtb_rectangle_filled(280, 290, 155, 60, arcade.color.CADET_GREY)
 # Cat Tail
 arcade.draw_line_strip([[300, 155], [325, 170], [325, 220], [350, 230]], arcade.color.BLACK, 5)
 
-
 # Start of Cat head
 arcade.draw_polygon_filled([[200, 175],
                             [150, 175],
@@ -51,11 +49,9 @@ arcade.draw_circle_filled(175, 135, 7, arcade.color.PINK)
 arcade.draw_circle_filled(190, 160, 5, arcade.color.BLACK)
 arcade.draw_circle_filled(170, 160, 5, arcade.color.BLACK)
 
-
 # Ears
 arcade.draw_triangle_filled(150, 175, 175, 200, 170, 175, arcade.color.BLACK)
 arcade.draw_triangle_filled(180, 175, 190, 200, 200, 175, arcade.color.BLACK)
-
 
 # Whiskers
 arcade.draw_line_strip([[145, 125], [165, 130]], arcade.color.BLACK, 2)
