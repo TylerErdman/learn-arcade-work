@@ -1,6 +1,5 @@
-def g():
-    my_value = 22
-
-
-g()
-print(my_value)
+name = "mary"
+if name.lower() == "bob" or "sam":
+    print("Yes")
+else:
+    print("No")
