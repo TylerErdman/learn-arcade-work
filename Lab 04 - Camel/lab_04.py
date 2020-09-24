@@ -148,4 +148,5 @@ def main():
                 print("The natives are getting close!")
 
 
-main()
+if __name__ == main():
+    main()
