@@ -1,13 +1,14 @@
 
 import random
 import arcade
+import math
 
 # --- Constants ---
 SPRITE_SCALING_PLAYER = 0.5
 SPRITE_SCALING_COIN = 0.2
 SPRITE_SCALING_GEM = 0.2
 COIN_COUNT = 50
-GEM_COUNT = 25
+GEM_COUNT = 20
 
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
@@ -15,7 +16,9 @@ MOVEMENT_SPEED = 5
 
 
 class SilverCoin(arcade.Sprite):
-    """Creating our coin"""
+
+    """ Creating our coin """
+
     def __init__(self, filename, sprite_scaling):
         super().__init__(filename, sprite_scaling)
 
@@ -23,13 +26,21 @@ class SilverCoin(arcade.Sprite):
         self.change_y = 0
 
     def update(self):
-        self.change_x = 0
-        self.change_y = 0
 
-        if self.left < 0 or self.right > SCREEN_WIDTH:
+        """ Move the coin """
+        self.center_x += self.change_x
+        self.center_y += self.change_y
+
+        if self.left < 0:
             self.change_x *= -1
 
-        if self.bottom < 0 or self.top > SCREEN_HEIGHT:
+        if self.right > SCREEN_WIDTH:
+            self.change_x *= -1
+
+        if self.bottom < 0:
+            self.change_y *= -1
+
+        if self.top > SCREEN_HEIGHT:
             self.change_y *= -1
 
 
@@ -38,18 +49,23 @@ class RedGem(arcade.Sprite):
     def __init__(self, filename, sprite_scaling):
         super().__init__(filename, sprite_scaling)
 
-        self.change_x = 0
-        self.change_y = 0
+        self.circle_angle = 1
+
+        self.circle_radius = random.randrange(1, 200)
+
+        self.circle_speed = .05
+
+        self.circle_center_x = random.randrange(0, SCREEN_WIDTH)
+        self.circle_center_y = random.randrange(0, SCREEN_HEIGHT)
 
     def update(self):
-        self.change_x = 0
-        self.change_y = 0
 
-        if self.left < 0 or self.right > SCREEN_WIDTH:
-            self.change_x *= -1
+        self.center_x = self.circle_radius * math.sin(self.circle_angle) \
+            + self.circle_center_x
+        self.center_y = self.circle_radius * math.cos(self.circle_angle) \
+            + self.circle_center_y
 
-        if self.bottom < 0 or self.top > SCREEN_HEIGHT:
-            self.change_y *= -1
+        self.circle_angle += self.circle_speed
 
 
 class MyGame(arcade.Window):
@@ -72,7 +88,7 @@ class MyGame(arcade.Window):
         # Don't show the mouse cursor
         self.set_mouse_visible(False)
 
-        arcade.set_background_color(arcade.color.AMARANTH)
+        arcade.set_background_color(arcade.color.AMAZON)
 
     def setup(self):
         """ Set up the game and initialize the variables. """
@@ -103,8 +119,8 @@ class MyGame(arcade.Window):
             coin.center_x = random.randrange(SCREEN_WIDTH)
             coin.center_y = random.randrange(SCREEN_HEIGHT)
 
-            coin.change_x = random.randrange(-5, 6)
-            coin.change_y = random.randrange(-5, 6)
+            coin.change_x = random.randrange(-4, 5)
+            coin.change_y = random.randrange(-4, 5)
 
             # Add the coin to the lists
             self.coin_list.append(coin)
@@ -185,23 +201,23 @@ class MyGame(arcade.Window):
 
             gem.remove_from_sprite_lists()
 
-            self.score -= 1
+            self.score -= 2
 
-        if self.player_sprite.LEFT < 0:
+        if self.player_sprite.left < 0:
 
-            self.player_sprite.LEFT = 0
+            self.player_sprite.left = 0
 
-        if self.player_sprite.RIGHT > SCREEN_WIDTH:
+        if self.player_sprite.right > SCREEN_WIDTH:
 
-            self.player_sprite.RIGHT = SCREEN_WIDTH
+            self.player_sprite.right = SCREEN_WIDTH
 
-        if self.player_sprite.UP > SCREEN_HEIGHT:
+        if self.player_sprite.top > SCREEN_HEIGHT:
 
-            self.player_sprite.up = 0
+            self.player_sprite.top = SCREEN_HEIGHT
 
-        if self.player_sprite.DOWN < 0:
+        if self.player_sprite.bottom < 0:
 
-            self.player_sprite.down = 0
+            self.player_sprite.bottom = 0
 
 
 def main():
