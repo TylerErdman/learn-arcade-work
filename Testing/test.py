@@ -1,6 +1,3 @@
-def print_line(width):
-    for i in range(width):
-        print("*", end="")
-    print()
+def Unicorn(Horse):
+    def __init__(self):
 
-print_line(5)

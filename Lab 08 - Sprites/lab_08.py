@@ -74,7 +74,7 @@ class MyGame(arcade.Window):
     def __init__(self):
         """ Initializer """
         # Call the parent class initializer
-        super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, "Sprite Battle")
+        super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, "Sprite Fright")
 
         # Variables that will hold sprite lists
         self.player_list = None
@@ -127,6 +127,7 @@ class MyGame(arcade.Window):
 
         # Create the Gems
         for i in range(GEM_COUNT):
+            # Gem image from Kenny.nl
             gem = RedGem("gemRed.png", SPRITE_SCALING_GEM)
 
             # Position the Gems
