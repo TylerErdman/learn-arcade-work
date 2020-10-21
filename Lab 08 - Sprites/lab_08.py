@@ -1,4 +1,3 @@
-
 import random
 import arcade
 import math
@@ -16,7 +15,6 @@ MOVEMENT_SPEED = 5
 
 
 class SilverCoin(arcade.Sprite):
-
     """ Creating our coin """
 
     def __init__(self, filename, sprite_scaling):
@@ -46,6 +44,7 @@ class SilverCoin(arcade.Sprite):
 
 class RedGem(arcade.Sprite):
     """Creating the Evil Gem"""
+
     def __init__(self, filename, sprite_scaling):
         super().__init__(filename, sprite_scaling)
 
@@ -59,11 +58,8 @@ class RedGem(arcade.Sprite):
         self.circle_center_y = random.randrange(0, SCREEN_HEIGHT)
 
     def update(self):
-
-        self.center_x = self.circle_radius * math.sin(self.circle_angle) \
-            + self.circle_center_x
-        self.center_y = self.circle_radius * math.cos(self.circle_angle) \
-            + self.circle_center_y
+        self.center_x = self.circle_radius * math.sin(self.circle_angle) + self.circle_center_x
+        self.center_y = self.circle_radius * math.cos(self.circle_angle) + self.circle_center_y
 
         self.circle_angle += self.circle_speed
 
@@ -88,7 +84,15 @@ class MyGame(arcade.Window):
         # Don't show the mouse cursor
         self.set_mouse_visible(False)
 
+        # Is the game over?
+        self.game_over = False
+        self.length_of_play = 0
+
         arcade.set_background_color(arcade.color.AMAZON)
+
+        # Loading up our sounds
+        self.bad_sound = arcade.load_sound("error3.wav")
+        self.good_sound = arcade.load_sound("coin2.wav")
 
     def setup(self):
         """ Set up the game and initialize the variables. """
@@ -110,7 +114,6 @@ class MyGame(arcade.Window):
 
         # Create the coins
         for i in range(COIN_COUNT):
-
             # Create the coin instance
             # Coin image from kenney.nl
             coin = SilverCoin("coinSilver.png", SPRITE_SCALING_COIN)
@@ -151,6 +154,10 @@ class MyGame(arcade.Window):
         output = f"Score: {self.score}"
         arcade.draw_text(output, 10, 20, arcade.color.WHITE, 24)
 
+        if self.game_over is True:
+            arcade.draw_text("Game Over\n Thanks for playing!", SCREEN_WIDTH / 3, SCREEN_HEIGHT / 2,
+                             arcade.color.WHITE, 36)
+
     def on_key_press(self, key, modifiers):
         """ Called when user presses key """
         if key == arcade.key.LEFT:
@@ -173,12 +180,15 @@ class MyGame(arcade.Window):
 
         """ Movement and game logic """
         # Call update on all sprites (The sprites don't do much in this
-        # example though.)
-        self.player_sprite.update()
+        # example though
+        self.length_of_play += 1
 
-        self.coin_list.update()
+        if self.game_over is False:
+            self.player_sprite.update()
 
-        self.gem_list.update()
+            self.coin_list.update()
+
+            self.gem_list.update()
 
         # Generate a list of all sprites that collided with the player.
 
@@ -193,32 +203,33 @@ class MyGame(arcade.Window):
         # Loop through each colliding sprite, remove it, and add to the score.
 
         for coin in coins_hit_list:
-
             coin.remove_from_sprite_lists()
+
+            arcade.play_sound(self.good_sound)
 
             self.score += 1
 
         for gem in gem_hit_list:
-
             gem.remove_from_sprite_lists()
+
+            arcade.play_sound(self.bad_sound)
 
             self.score -= 2
 
         if self.player_sprite.left < 0:
-
             self.player_sprite.left = 0
 
         if self.player_sprite.right > SCREEN_WIDTH:
-
             self.player_sprite.right = SCREEN_WIDTH
 
         if self.player_sprite.top > SCREEN_HEIGHT:
-
             self.player_sprite.top = SCREEN_HEIGHT
 
         if self.player_sprite.bottom < 0:
-
             self.player_sprite.bottom = 0
+
+        if self.score >= 20 or self.score <= -10 or self.length_of_play > 3600:
+            self.game_over = True
 
 
 def main():
