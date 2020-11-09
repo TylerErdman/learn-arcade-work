@@ -72,7 +72,33 @@ def main():
     room_list.append(room)
 
     room = Room("You stand at the top of the stairs. You can see how big the house really is from up here."
-                "\nTo the north is a closet door. To the south is a ")
+                "\nTo the north is a closet door. To the south is a master bedroom."
+                "\nTo the west looks like another bedroom and down is the foyer.", 10, 12, None, 11, None, 3)
+    room_list.append(room)
+
+    room = Room("You're in a dusty closet. There aren't a lot of clothes in here."
+                "\nMight be a good hiding place. South is the  top of the stairs.", None, 9, None, None, None, None)
+    room_list.append(room)
+
+    room = Room("You stand in a dusty bedroom. There is a wall of creepy dolls and their eyes seem to follow you."
+                "\nYou wonder what this room might be used for. The only exit is east to the top of the stairs.",
+                None, None, 9, None, None, None)
+    room_list.append(room)
+
+    room = Room("You now stand in what looks like to be a master bedroom. It smells like death."
+                "\nThere is a large impression in the mattress on one side."
+                "\nIt seems the only way out the north to the top of the stairs.", 9, None, None, None, None, None)
+    room_list.append(room)
+
+    room = Room("Standing in the basement it looks like a chamber with a door to the south and north",
+                15, 14, None, 4, 4, None)
+    room_list.append(room)
+
+    room = Room("You stand in a laundry room. The room is packed with blood stained clothing."
+                "\nThere is just enough space to open the door.", 13, None, None, None, None, None)
+    room_list.append(room)
+
+
     item_list = []
     item = Item()
     item_list.append(item)
