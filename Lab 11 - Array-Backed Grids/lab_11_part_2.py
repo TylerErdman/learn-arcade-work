@@ -92,7 +92,7 @@ class MyGame(arcade.Window):
 
                 if continuous_count > 2 and self.grid[row][column] == 0 and times_said == 0:
 
-                    print("There are", continuous_count, "cells selected in row", row + 1)
+                    print("There are", continuous_count, "continuous blocks selected in row", row + 1)
                     times_said = 1
             print("Row", row_counting, "has", selected_cells, "selected.")
 
