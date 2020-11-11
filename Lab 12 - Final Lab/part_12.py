@@ -45,7 +45,7 @@ def main():
 
     room = Room("You stand in the main foyer with a grand staircase in the middle of the room."
                 "\nNorth or up, leads upstairs. South leads you to the mudroom."
-                "\nEast leads to the office and west is the dining room.", 9, 0, 4, 3, 9, None)
+                "\nEast leads to the office and west is the dining room.", 9, 0, 4, 2, 9, None)
     room_list.append(room)
 
     room = Room("You see two large sofa chairs that seem like they've seen better days in this office."
@@ -72,8 +72,8 @@ def main():
     room_list.append(room)
 
     room = Room("You stand at the top of the stairs. You can see how big the house really is from up here."
-                "\nTo the north is a closet door. To the south is a master bedroom."
-                "\nTo the west looks like another bedroom and down is the foyer.", 10, 12, None, 11, None, 3)
+                "\nTo the north is a closet door. To the east is a master bedroom."
+                "\nTo the west looks like another bedroom and down is the foyer.", 10, None, 12, 11, None, 3)
     room_list.append(room)
 
     room = Room("You're in a dusty closet. There aren't a lot of clothes in here."
@@ -87,7 +87,7 @@ def main():
 
     room = Room("You now stand in what looks like to be a master bedroom. It smells like death."
                 "\nThere is a large impression in the mattress on one side."
-                "\nIt seems the only way out the north to the top of the stairs.", 9, None, None, None, None, None)
+                "\nIt seems the only way out the west, back to the top of the stairs.", None, None, None, 9, None, None)
     room_list.append(room)
 
     room = Room("Standing in the basement it looks like a chamber with a door to the south and north."
@@ -96,7 +96,8 @@ def main():
     room_list.append(room)
 
     room = Room("You stand in a laundry room. The room is packed with blood stained clothing."
-                "\nThere is just enough space to open the door.", 13, None, None, None, None, None)
+                "\nThere is just enough space to open the door."
+                "\nThe only way out is north to the chamber.", 13, None, None, None, None, None)
     room_list.append(room)
 
     room = Room("You're in a large stone hallway. You can hear water dripping."
@@ -119,19 +120,52 @@ def main():
                 17, 19, None, None, None, None)
     room_list.append(room)
 
-    room = Room("You have finally escaped that creepy house.", None, None, None, None, None, None)
+    room = Room("You have finally escaped that creepy house."
+                "\nThanks for playing!", None, None, None, None, None, None)
     room_list.append(room)
 
     item_list = []
-    item = Item(5, "A short blunt butter knife, good for spreading jam.", "KNIFE")
+
+    item = Item(5, "A short dull butter knife, good for spreading jam.", "Knife")
+    item_list.append(item)
+
+    item = Item(11, "There is one doll that is particularly shiny and well taken care of.", "Doll")
+    item_list.append(item)
+
+    item = Item(7, "A TV remote sits on the crusty couch.", "Remote")
+    item_list.append(item)
+
+    item = Item(4, "A book that reads 'How to be an efficient cannibal'.", "Book")
+    item_list.append(item)
+
+    item = Item(12, "A key on a hook, it looks to be like the skeleton variety.", "Key")
+    item_list.append(item)
+
+    item = Item(5, "There are a few pieces of questionable food in the refrigerator", "Food")
+    item_list.append(item)
+
+    item = Item(16, "A bloody cleaver stuck inside a block of wood.", "Cleaver")
     item_list.append(item)
 
     current_room = 0
     done = False
 
+    print("Welcome to the House of Horror")
+    print()
+    print("You were walking on the street when you heard screams coming from inside the house.")
+    print("Rushing into the house you shut the front door behind you.")
+    print("You panic as you can no longer get the door open.")
+    print("Good luck finding a way out.")
+
     while not done:
+
         print()
         print(room_list[current_room].description)
+
+        for item in item_list:
+            if item.room_number == current_room:
+                print(item.long_description)
+
         print()
         print("You can type q or quit to exit the game.")
         print()
@@ -179,7 +213,10 @@ def main():
             print()
             print("I don't understand that.")
 
+        if current_room == 19:
+            print(room_list[current_room].description)
+            done = True
+
 
 if __name__ == "__main__":
     main()
-
