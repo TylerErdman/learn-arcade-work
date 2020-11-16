@@ -20,7 +20,6 @@ class Item:
         self.room_number = room_number
         self.long_description = long_description
         self.short_name = short_name
-        self.picked_up = False
 
 
 def main():
@@ -54,8 +53,8 @@ def main():
     room_list.append(room)
 
     room = Room("Standing in this very bloody and gross kitchen you wonder if anyone lives here."
-                "\nTo the north is a large door that looks like a walk-in freezer."
-                "\nTo the south is the dining room. East is the living room.", 6, 2, 7, None, None, None)
+                "\nTo the north is a large door that looks like a walk-in freezer, but it's locked."
+                "\nTo the south is the dining room. East is the living room.", None, 2, 7, None, None, None)
     room_list.append(room)
 
     room = Room("You see bodies swinging gently back and forth. You're standing in a freezer."
@@ -63,12 +62,12 @@ def main():
     room_list.append(room)
 
     room = Room("You stand in the living room with the TV buzzing with black and white fuzz."
-                "\n It seems this place is real dusty."
-                "\n To the west is the kitchen and the east is a closet door.", None, None, 8, 5, None, None)
+                "\nIt seems this place is real dusty."
+                "\nTo the west is the kitchen and the east is a closet door.", None, None, 8, 5, None, None)
     room_list.append(room)
 
     room = Room("You're in these dusty old people clothes. You must be hard to spot from outside while in the closet."
-                "\n The only exit is back to the living room, west.", None, None, None, 7, None, None)
+                "\nThe only exit is back to the living room, west.", None, None, None, 7, None, None)
     room_list.append(room)
 
     room = Room("You stand at the top of the stairs. You can see how big the house really is from up here."
@@ -167,51 +166,126 @@ def main():
                 print(item.long_description)
 
         print()
-        print("You can type q or quit to exit the game.")
+        print("You can type 'H' or 'help' for a full instruction of commands.")
         print()
-        direction_traveled = str(input("Which way would you like to go? "))
-        if direction_traveled.upper() == "N" or direction_traveled.upper() == "NORTH":
-            next_room = room_list[current_room].north
-            if next_room is None:
-                print("You can't go that way")
+        user_command = str(input("What would you like to do? "))
+        command_words_list = user_command.split(" ")
+
+        # This code handles the command words "Go" and "Travel" to move around the house.
+        if command_words_list[0].upper() == "GO" or command_words_list[0].upper() == "TRAVEL":
+            if command_words_list[1].upper() == "N" or command_words_list[1].upper() == "NORTH":
+                next_room = room_list[current_room].north
+                if next_room is None:
+                    print("You can't go that way")
+                else:
+                    current_room = next_room
+            elif command_words_list[1].upper() == "S" or command_words_list[1].upper() == "SOUTH":
+                next_room = room_list[current_room].south
+                if next_room is None:
+                    print("You can't go that way")
+                else:
+                    current_room = next_room
+            elif command_words_list[1].upper() == "E" or command_words_list[1].upper() == "EAST":
+                next_room = room_list[current_room].east
+                if next_room is None:
+                    print("You can't go that way")
+                else:
+                    current_room = next_room
+            elif command_words_list[1].upper() == "W" or command_words_list[1].upper() == "WEST":
+                next_room = room_list[current_room].west
+                if next_room is None:
+                    print("You can't go that way")
+                else:
+                    current_room = next_room
+            elif command_words_list[1].upper() == "U" or command_words_list[1].upper() == "UP":
+                next_room = room_list[current_room].up
+                if next_room is None:
+                    print("You can't go that way")
+                else:
+                    current_room = next_room
+            elif command_words_list[1].upper() == "D" or command_words_list[1].upper() == "DOWN":
+                next_room = room_list[current_room].down
+                if next_room is None:
+                    print("You cant go that way")
+                else:
+                    current_room = next_room
             else:
-                current_room = next_room
-        elif direction_traveled.upper() == "S" or direction_traveled.upper() == "SOUTH":
-            next_room = room_list[current_room].south
-            if next_room is None:
-                print("You can't go that way")
-            else:
-                current_room = next_room
-        elif direction_traveled.upper() == "E" or direction_traveled.upper() == "EAST":
-            next_room = room_list[current_room].east
-            if next_room is None:
-                print("You can't go that way")
-            else:
-                current_room = next_room
-        elif direction_traveled.upper() == "W" or direction_traveled.upper() == "WEST":
-            next_room = room_list[current_room].west
-            if next_room is None:
-                print("You can't go that way")
-            else:
-                current_room = next_room
-        elif direction_traveled.upper() == "U" or direction_traveled.upper() == "UP":
-            next_room = room_list[current_room].up
-            if next_room is None:
-                print("You can't go that way")
-            else:
-                current_room = next_room
-        elif direction_traveled.upper() == "D" or direction_traveled.upper() == "DOWN":
-            next_room = room_list[current_room].down
-            if next_room is None:
-                print("You cant go that way")
-            else:
-                current_room = next_room
-        elif direction_traveled.upper() == "Q" or direction_traveled.upper() == "QUIT":
+                print()
+                print("I don't understand that.")
+
+        # This controls for if you quit the game.
+        if command_words_list[0].upper() == "Q" or command_words_list[0].upper() == "QUIT":
             print("Thanks for playing!")
             done = True
-        else:
+
+        # This command chain controls the ability to pick up items
+        if command_words_list[0].upper() == "GET" or command_words_list[0].upper() == "GRAB":
+            for item in item_list:
+                if item.short_name.upper() == command_words_list[1].upper():
+                    item.room_number = -1
+
+        # This command chain handles the inventory command
+        if command_words_list[0].upper() == "INVENTORY" or command_words_list[0].upper() == "INV":
+            for item in item_list:
+                if item.room_number == -1:
+                    print("You have", item.short_name)
+
+        # This command chain handles dropping an item
+        if command_words_list[0].upper() == "DROP":
+            for item in item_list:
+                if item.room_number == -1:
+                    if command_words_list[1].upper() == item.short_name.upper():
+                        item.room_number = current_room
+                        print("You dropped the", item.short_name)
+
+        # This command chain handles using objects
+        if command_words_list[0].upper() == "USE":
+            # Turns the TV on and off by changing the room description
+            if command_words_list[1].upper == "REMOTE":
+                if room_list[7].description == ("You stand in the living room with the "
+                                                "TV buzzing with black and white fuzz."
+                                                "\nIt seems this place is real dusty."
+                                                "\nTo the west is the kitchen and the east is a closet door."):
+                    room_list[7].description = ("The TV is turned off now. You stand in living room."
+                                                "\nIt's still incredibly dusty.")
+                else:
+                    room_list[7].description = ("You stand in the living room with the "
+                                                "TV buzzing with black and white fuzz."
+                                                "\nIt seems this place is real dusty."
+                                                "\nTo the west is the kitchen and the east is a closet door.")
+
+            if command_words_list[1].upper == "KEY":
+                if current_room == 5:
+                    print("The freezer door unlocked.")
+                    room_list[5].north = 6
+                    print()
+                    room_list[5].description = ("Standing in this very bloody and gross kitchen "
+                                                "you wonder if anyone lives here."
+                                                "\nTo the north is a large door that looks like a walk-in freezer,"
+                                                " that is now unlocked."
+                                                "\nTo the south is the dining room. East is the living room.")
+                else:
+                    print("You can't do that now.")
+
+                if command_words_list[1].upper() == "DOLL":
+                    print("It seemed kind of pointless to take the doll."
+                          "\nThe doll is very shiny though.")
+
+        if command_words_list[0].upper() == "H" or command_words_list[0].upper() == "HELP":
             print()
-            print("I don't understand that.")
+            print("You can type 'go' or 'travel' followed by the direction to move rooms. For example, "
+                  "'go north' would move your player one room north if possible.")
+            print()
+            print("You can type 'get' or 'grab' to pick up an item. For example, "
+                  "'get key' would add the key to your inventory.")
+            print()
+            print("You can type 'use [item]' to use the item if possible.")
+            print()
+            print("You can type 'drop [item]' to place an item in a room.")
+            print()
+            print("You can type 'inventory' or 'inv' to see your current inventory.")
+            print()
+            print("You can type 'Q' or 'QUIT' to quit and end the game.")
 
         if current_room == 19:
             print(room_list[current_room].description)
