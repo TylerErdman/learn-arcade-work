@@ -49,7 +49,8 @@ def main():
 
     room = Room("You see two large sofa chairs that seem like they've seen better days in this office."
                 "\nTo the west is the foyer"
-                "\nIt seems to be the only exit.", None, None, None, 3, None, None)
+                "\nIt seems to be the only exit."
+                "\nThere is a bookcase on the east wall.", None, None, None, 3, None, None)
     room_list.append(room)
 
     room = Room("Standing in this very bloody and gross kitchen you wonder if anyone lives here."
@@ -124,7 +125,7 @@ def main():
 
     item_list = []
 
-    item = Item(5, "A short dull butter knife, good for spreading jam.", "Knife")
+    item = Item(5, "A short dull butter knife on the counter, good for spreading jam.", "Knife")
     item_list.append(item)
 
     item = Item(11, "There is one doll that is particularly shiny and well taken care of.", "Doll")
@@ -250,7 +251,7 @@ def main():
         # This command chain handles using objects
         if command_words_list[0].upper() == "USE":
             # Turns the TV on and off by changing the room description
-            if command_words_list[1].upper == "REMOTE" and item_list[2].room_number == -1:
+            if command_words_list[1].upper() == "REMOTE" and item_list[2].room_number == -1:
                 if room_list[7].description == ("You stand in the living room with the "
                                                 "TV buzzing with black and white fuzz."
                                                 "\nIt seems this place is real dusty."
@@ -264,7 +265,7 @@ def main():
                                                 "\nIt seems this place is real dusty."
                                                 "\nTo the west is the kitchen and the east is a closet door.")
 
-            if command_words_list[1].upper == "KEY" and item_list[4].room_number == -1:
+            if command_words_list[1].upper() == "KEY" and item_list[4].room_number == -1:
                 if current_room == 5:
                     print("The freezer door unlocked.")
                     room_list[5].north = 6
@@ -277,27 +278,27 @@ def main():
                 else:
                     print("You can't do that now.")
 
-                if command_words_list[1].upper() == "DOLL" and item_list[1].room_number == -1:
-                    print("It seemed kind of pointless to take the doll."
-                          "\nit is very shiny though.")
+            if command_words_list[1].upper() == "DOLL" and item_list[1].room_number == -1:
+                print("It seemed kind of pointless to take the doll."
+                      "\nit is very shiny though.")
 
-                if command_words_list[1].upper() == "FOOD" and item_list[5].room_number == -1:
+            if command_words_list[1].upper() == "FOOD" and item_list[5].room_number == -1:
 
-                    if current_room == 17:
-                        print("You threw the food at the bear."
-                              "\nIt at the food and got out of the way.")
-                        room_list[17].south = 19
-                        room_list[17].description = ("The large bear is now out of the way in the corner."
-                                                     "\nIt seems you are so close to freedom."
-                                                     "\nThere is a door to the hallway to the east."
-                                                     "\nThe cave is open to the south.")
+                if current_room == 17:
+                    print("You threw the food at the bear."
+                          "\nIt ate the food and got out of the way.")
+                    room_list[17].south = 19
+                    room_list[17].description = ("The large bear is now out of the way in the corner."
+                                                 "\nIt seems you are so close to freedom."
+                                                 "\nThere is a door to the hallway to the east."
+                                                 "\nThe cave is open to the south.")
 
-                    elif current_room != 17:
-                        print("You ate the food. You hope it will sit in your stomach well.")
-                        item_list[5].room_number = -2
+                elif current_room != 17:
+                    print("You ate the food. You hope it will sit in your stomach well.")
+                    item_list[5].room_number = -2
 
-                    else:
-                        print("You don't seem to have the food.")
+                else:
+                    print("You don't seem to have the food.")
 
                 if command_words_list[1].upper() == "BOOK" and item_list[3].room_number == -1:
                     print("You begin reading from the book. The more you read the more disgusted you are."
