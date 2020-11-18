@@ -49,7 +49,7 @@ def main():
 
     room = Room("You see two large sofa chairs that seem like they've seen better days in this office."
                 "\nTo the west is the foyer"
-                "\n*Behind the bookcase is stairway to the basement.", None, None, 13, 3, None, 13)
+                "\nIt seems to be the only exit.", None, None, None, 3, None, None)
     room_list.append(room)
 
     room = Room("Standing in this very bloody and gross kitchen you wonder if anyone lives here."
@@ -109,9 +109,8 @@ def main():
                 "\nIt seems the only exit is back through the door, west.", None, None, None, 15, None, None)
     room_list.append(room)
 
-    room = Room("There is a large sleeping bear in the *corner of the room. It seems to be a cave."
-                "\nThere is the doorway to the east."
-                "\nYou can feel a breeze coming from the tunnel to the south.", None, 18, 15, None, None, None)
+    room = Room("There is a large sleeping bear blocking the exit to the south. It seems to be a cave."
+                "\nThere is the doorway to hallway in the east.", None, None, 15, None, None, None)
     room_list.append(room)
 
     room = Room("It is a dark tunnel with a light at the end of it."
@@ -223,6 +222,16 @@ def main():
             for item in item_list:
                 if item.short_name.upper() == command_words_list[1].upper():
                     item.room_number = -1
+                    if item.short_name.upper() == "BOOK":
+                        print("You hear a shifting and the bookcase slides out of the way"
+                              " revealing stairs to the east.")
+                        room_list[4].east = 13
+                        room_list[4].down = 13
+                        room_list[4].description = ("You stand in the office. There are two large brown chairs."
+                                                    "\nThey haven't been used in a while."
+                                                    "\nThere the a doorway to the west leading to the foyer."
+                                                    "\nThe bookcase has now moved out of the way "
+                                                    "and reveals stairs to the east.")
 
         # This command chain handles the inventory command
         if command_words_list[0].upper() == "INVENTORY" or command_words_list[0].upper() == "INV":
@@ -241,20 +250,21 @@ def main():
         # This command chain handles using objects
         if command_words_list[0].upper() == "USE":
             # Turns the TV on and off by changing the room description
-            if command_words_list[1].upper == "REMOTE":
+            if command_words_list[1].upper == "REMOTE" and item_list[2].room_number == -1:
                 if room_list[7].description == ("You stand in the living room with the "
                                                 "TV buzzing with black and white fuzz."
                                                 "\nIt seems this place is real dusty."
                                                 "\nTo the west is the kitchen and the east is a closet door."):
                     room_list[7].description = ("The TV is turned off now. You stand in living room."
-                                                "\nIt's still incredibly dusty.")
+                                                "\nIt's still incredibly dusty."
+                                                "\nTo the west is the kitchen and the east is a closet door.")
                 else:
                     room_list[7].description = ("You stand in the living room with the "
                                                 "TV buzzing with black and white fuzz."
                                                 "\nIt seems this place is real dusty."
                                                 "\nTo the west is the kitchen and the east is a closet door.")
 
-            if command_words_list[1].upper == "KEY":
+            if command_words_list[1].upper == "KEY" and item_list[4].room_number == -1:
                 if current_room == 5:
                     print("The freezer door unlocked.")
                     room_list[5].north = 6
@@ -267,9 +277,32 @@ def main():
                 else:
                     print("You can't do that now.")
 
-                if command_words_list[1].upper() == "DOLL":
+                if command_words_list[1].upper() == "DOLL" and item_list[1].room_number == -1:
                     print("It seemed kind of pointless to take the doll."
-                          "\nThe doll is very shiny though.")
+                          "\nit is very shiny though.")
+
+                if command_words_list[1].upper() == "FOOD" and item_list[5].room_number == -1:
+
+                    if current_room == 17:
+                        print("You threw the food at the bear."
+                              "\nIt at the food and got out of the way.")
+                        room_list[17].south = 19
+                        room_list[17].description = ("The large bear is now out of the way in the corner."
+                                                     "\nIt seems you are so close to freedom."
+                                                     "\nThere is a door to the hallway to the east."
+                                                     "\nThe cave is open to the south.")
+
+                    elif current_room != 17:
+                        print("You ate the food. You hope it will sit in your stomach well.")
+                        item_list[5].room_number = -2
+
+                    else:
+                        print("You don't seem to have the food.")
+
+                if command_words_list[1].upper() == "BOOK" and item_list[3].room_number == -1:
+                    print("You begin reading from the book. The more you read the more disgusted you are."
+                          "\nIt has very vivid descriptions about how to catch people and butcher them."
+                          "\nAfter reading a while you decide to put the book down.")
 
         if command_words_list[0].upper() == "H" or command_words_list[0].upper() == "HELP":
             print()
