@@ -304,6 +304,24 @@ def main():
                           "\nIt has very vivid descriptions about how to catch people and butcher them."
                           "\nAfter reading a while you decide to put the book down.")
 
+                if command_words_list[1].upper() == "KNIFE" and item_list[0].room_number == -1:
+                    if current_room == 17:
+                        print("You attempt to stab the bear with the small dull knife")
+                        print("The bear attacked you and you are now dead.")
+                        done = True
+                    else:
+                        print("Not sure what you want to do with that.")
+
+                if command_words_list[1].upper() == "CLEAVER" and item_list[5].room_number == -1:
+                    if current_room == 17:
+                        print("You attempt to hack and slash at the bear."
+                              "\nThrough a hectic battle you finally won and the bear is dead."
+                              "\nOut of the way. You go south and escape from this hell hole.")
+                        print("Thanks for playing.")
+                        done = True
+                    else:
+                        print("Not sure what you want to do with that.")
+
         if command_words_list[0].upper() == "H" or command_words_list[0].upper() == "HELP":
             print()
             print("You can type 'go' or 'travel' followed by the direction to move rooms. For example, "
