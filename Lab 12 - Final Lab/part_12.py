@@ -1,3 +1,7 @@
+"""
+The Haunted Mansion
+"""
+
 
 class Room:
 
@@ -158,9 +162,11 @@ def main():
 
     while not done:
 
+        # printing the current room description
         print()
         print(room_list[current_room].description)
 
+        # If there is an item in the room print it
         for item in item_list:
             if item.room_number == current_room:
                 print(item.long_description)
@@ -172,7 +178,7 @@ def main():
         command_words_list = user_command.split(" ")
 
         # This code handles the command words "Go" and "Travel" to move around the house.
-        if command_words_list[0].upper() == "GO" or command_words_list[0].upper() == "TRAVEL":
+        if command_words_list[0].upper() == "GO" or command_words_list[0].upper() == "TRAVEL" and len(command_words_list) > 1:
             if command_words_list[1].upper() == "N" or command_words_list[1].upper() == "NORTH":
                 next_room = room_list[current_room].north
                 if next_room is None:
@@ -206,7 +212,7 @@ def main():
             elif command_words_list[1].upper() == "D" or command_words_list[1].upper() == "DOWN":
                 next_room = room_list[current_room].down
                 if next_room is None:
-                    print("You cant go that way")
+                    print("You can't go that way")
                 else:
                     current_room = next_room
             else:
@@ -221,11 +227,11 @@ def main():
         # This command chain controls the ability to pick up items
         if command_words_list[0].upper() == "GET" or command_words_list[0].upper() == "GRAB":
             for item in item_list:
-                if item.short_name.upper() == command_words_list[1].upper():
+                if item.short_name.upper() == command_words_list[1].upper() and item.room_number == current_room:
                     item.room_number = -1
-                    if item.short_name.upper() == "BOOK":
+                    if item.short_name.upper() == "BOOK" and room_list[4].east != 13:
                         print("You hear a shifting and the bookcase slides out of the way"
-                              " revealing stairs to the east.")
+                              " revealing stairs to the east.") 
                         room_list[4].east = 13
                         room_list[4].down = 13
                         room_list[4].description = ("You stand in the office. There are two large brown chairs."
@@ -247,6 +253,8 @@ def main():
                     if command_words_list[1].upper() == item.short_name.upper():
                         item.room_number = current_room
                         print("You dropped the", item.short_name)
+                    else:
+                        print("I'm not sure what you want to drop.")
 
         # This command chain handles using objects
         if command_words_list[0].upper() == "USE":
@@ -293,35 +301,32 @@ def main():
                                                  "\nThere is a door to the hallway to the east."
                                                  "\nThe cave is open to the south.")
 
-                elif current_room != 17:
+                else:
                     print("You ate the food. You hope it will sit in your stomach well.")
                     item_list[5].room_number = -2
 
+            if command_words_list[1].upper() == "BOOK" and item_list[3].room_number == -1:
+                print("You begin reading from the book. The more you read the more disgusted you are."
+                      "\nIt has very vivid descriptions about how to catch people and butcher them."
+                      "\nYou decide to stop reading.")
+
+            if command_words_list[1].upper() == "KNIFE" and item_list[0].room_number == -1:
+                if current_room == 17:
+                    print("You attempt to stab the bear with the small dull knife")
+                    print("The bear attacked you and you are now dead.")
+                    done = True
                 else:
-                    print("You don't seem to have the food.")
+                    print("Not sure what you want to do with that.")
 
-                if command_words_list[1].upper() == "BOOK" and item_list[3].room_number == -1:
-                    print("You begin reading from the book. The more you read the more disgusted you are."
-                          "\nIt has very vivid descriptions about how to catch people and butcher them."
-                          "\nAfter reading a while you decide to put the book down.")
-
-                if command_words_list[1].upper() == "KNIFE" and item_list[0].room_number == -1:
-                    if current_room == 17:
-                        print("You attempt to stab the bear with the small dull knife")
-                        print("The bear attacked you and you are now dead.")
-                        done = True
-                    else:
-                        print("Not sure what you want to do with that.")
-
-                if command_words_list[1].upper() == "CLEAVER" and item_list[5].room_number == -1:
-                    if current_room == 17:
-                        print("You attempt to hack and slash at the bear."
-                              "\nThrough a hectic battle you finally won and the bear is dead."
-                              "\nOut of the way. You go south and escape from this hell hole.")
-                        print("Thanks for playing.")
-                        done = True
-                    else:
-                        print("Not sure what you want to do with that.")
+            if command_words_list[1].upper() == "CLEAVER" and item_list[6].room_number == -1:
+                if current_room == 17:
+                    print("You attempt to hack and slash at the bear."
+                          "\nThrough a hectic battle you finally won and the bear is dead."
+                          "\nOut of the way. You go south and escape from this hell hole.")
+                    print("Thanks for playing.")
+                    done = True
+                else:
+                    print("Not sure what you want to do with that.")
 
         if command_words_list[0].upper() == "H" or command_words_list[0].upper() == "HELP":
             print()
@@ -331,7 +336,7 @@ def main():
             print("You can type 'get' or 'grab' to pick up an item. For example, "
                   "'get key' would add the key to your inventory.")
             print()
-            print("You can type 'use [item]' to use the item if possible.")
+            print("You can type 'use [item]' to use the item in your inventory if possible.")
             print()
             print("You can type 'drop [item]' to place an item in a room.")
             print()
