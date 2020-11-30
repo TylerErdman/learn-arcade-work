@@ -3,13 +3,13 @@ The Haunted Mansion
 """
 
 import random
+import arcade
 
 
 class Room:
-
     """This is a class that defines and area in the game."""
-    def __init__(self, description, north, south, east, west, up, down):
 
+    def __init__(self, description, north, south, east, west, up, down):
         """Assigning the variables to the attributes."""
         self.description = description
         self.north = north
@@ -22,6 +22,7 @@ class Room:
 
 class Item:
     """Defines an Item class."""
+
     def __init__(self, room_number, long_description, short_name):
         self.room_number = room_number
         self.long_description = long_description
@@ -30,9 +31,10 @@ class Item:
 
 class Enemy:
     """Defines the Enemy class."""
-    def __init__(self, name, room_number):
-        self.hp = 40
-        self.attack = random.randrange(1, 12)
+
+    def __init__(self, name, hp, attack, room_number):
+        self.hp = hp
+        self.attack = attack
         self.name = name
         self.room_number = room_number
 
@@ -161,9 +163,14 @@ def main():
     item = Item(16, "A bloody cleaver stuck inside a block of wood.", "Cleaver")
     item_list.append(item)
 
-    enemy_list = []
-    enemy = Enemy("Charles", 1)
-    enemy_list.append(enemy)
+    # Creating enemies to fight
+    enemy_bear = Enemy("Bear", 50, random.randrange(4, 12), 17)
+    enemy_man = Enemy("Man", 100, random.randrange(8, 21), 12)
+
+    # Loading my sounds for combat
+    player_got_hurt_sound = arcade.load_sound("hurt1.wav")
+
+    enemy_got_hurt_sound = arcade.load_sound("hurt3.wav")
 
     current_room = 0
     done = False
@@ -179,6 +186,7 @@ def main():
     while not done:
 
         # printing the current room description
+        print(f"Current room: {current_room}")
         print()
         print(room_list[current_room].description)
 
@@ -365,6 +373,89 @@ def main():
         if current_room == 19:
             print(room_list[current_room].description)
             done = True
+
+        if command_words_list[0].upper() == "FIGHT" and 1 < len(command_words_list) \
+                or command_words_list[0].upper() == "F" and 1 < len(command_words_list):
+            if command_words_list[1].upper() == "BEAR" and current_room == enemy_bear.room_number \
+                    and enemy_bear.hp >= 0 or command_words_list[1].upper() == "B" \
+                    and current_room == enemy_bear.room_number and enemy_bear.hp >= 0:
+                fight_bear = True
+                while fight_bear:
+                    if enemy_bear.hp <= 0:
+                        print("You killed the bear!")
+                        room_list[17].description = ("You stand in a chamber. There is the hallway to the west."
+                                                     "\nThe cave opening to the south. There is a dead bear.")
+                        room_list[17].south = 19
+                        enemy_bear.room_number = -2
+                        fight_bear = False
+                    print()
+                    print("You are currently in a fight with the bear!")
+                    print()
+                    print("You can type 'h' or 'help' for the command list.")
+                    print()
+                    user_command = str(input("What would you like to do? "))
+                    command_words_list = user_command.split(" ")
+
+                    if command_words_list[0].upper() == "H" or command_words_list[0].upper() == "HELP":
+                        print("In a fight you can type 'atk' or 'attack' "
+                              "and the game will by default use your best weapon.")
+                        print()
+                        print("You can type 'run' or 'r', you will have a chance to escape.")
+                        print()
+                        print("You can type 'd' or 'dodge', the enemy attack has a greater chance not to hit you.")
+                        print()
+                        print("To win a fight you must bring the bear's hp down to 0.")
+
+                    if command_words_list[0].upper() == "ATK" or command_words_list[0].upper() == "ATTACK":
+                        chance_to_hit = random.randrange(1, 21)
+                        if chance_to_hit > 13:
+
+                            if item_list[6].room_number == -1:
+                                print("You attacked with the cleaver!")
+                                atk_dmg = random.randrange(10, 15)
+                                enemy_bear.hp -= atk_dmg
+                                arcade.play_sound(enemy_got_hurt_sound)
+                                print(f"You dealt {atk_dmg} to the bear!")
+                            elif item_list[0].room_number == -1:
+                                print("You attacked with the butter knife!")
+                                atk_dmg = random.randrange(5, 11)
+                                enemy_bear.hp -= atk_dmg
+                                arcade.play_sound(enemy_got_hurt_sound)
+                                print(f"You dealt {atk_dmg} to the bear!")
+                            else:
+                                print("You attacked with a punch!")
+                                atk_dmg = random.randrange(1, 7)
+                                enemy_bear.hp -= atk_dmg
+                                print(f"The dealt {atk_dmg} to the bear!")
+                                arcade.play_sound(enemy_got_hurt_sound)
+                        else:
+                            print("You attacked and missed!")
+
+                    if command_words_list[0].upper() == "R" or command_words_list[0].upper() == "Run":
+                        chance_to_run = random.randrange(1, 21)
+                        if chance_to_run > 10:
+                            print("You successfully ran away!")
+                            current_room -= 1
+                            fight_bear = False
+                        else:
+                            print("You couldn't escape!")
+
+                    chance_to_hit = random.randrange(1, 21)
+                    if chance_to_hit > 10:
+                        if command_words_list[0].upper() == "D" or command_words_list[0].upper() == "Dodge":
+                            if chance_to_hit > 15:
+                                print("The bear attacked you!")
+                                current_hp -= random.randrange(2, 10)
+                                arcade.play_sound(player_got_hurt_sound)
+                            elif chance_to_hit <= 15:
+                                print("The bear tried to attack you but missed!")
+                        else:
+                            print("The bear attacked you!")
+                            atk_dmg = random.randrange(3, 10)
+                            current_hp -= atk_dmg
+                            print(f"The bear attacked you a dealt {atk_dmg} damage!")
+
+
 """
         # This checks to see if there is an enemy in the room, if there is initiate combat!
         for enemy in enemy_list:
@@ -420,7 +511,6 @@ def main():
                     else:
                         print(f"{enemy.name} missed their attack!")
 """
-
 
 if __name__ == "__main__":
     main()
