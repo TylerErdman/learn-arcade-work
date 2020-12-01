@@ -39,6 +39,16 @@ class Enemy:
         self.room_number = room_number
 
 
+class EnemyMan(Enemy):
+    """Defines the Class for the Big enemy"""
+
+    def __init__(self, name, hp, attack, enemy_current_room):
+
+        super().__init__(self, name, hp, attack)
+
+        self.room_number = enemy_current_room
+
+
 def main():
     """This is the main function that all actions fall under"""
     # Creating a list to store rooms
@@ -163,9 +173,9 @@ def main():
     item = Item(16, "A bloody cleaver stuck inside a block of wood.", "Cleaver")
     item_list.append(item)
 
-    # Creating enemies to fight
+    # Creating the enemies to fight
     enemy_bear = Enemy("Bear", 50, random.randrange(4, 12), 17)
-    enemy_man = Enemy("Man", 100, random.randrange(8, 21), 12)
+    enemy_butch = EnemyMan("Butch", 100, random.randrange(5, 15), 8)
 
     # Loading my sounds for combat
     player_got_hurt_sound = arcade.load_sound("hurt1.wav")
@@ -175,6 +185,8 @@ def main():
     current_room = 0
     done = False
     current_hp = 100
+    does_butch_wake_up = 0
+    butch_woken = False
 
     print("Welcome to the House of Horror")
     print()
@@ -195,9 +207,16 @@ def main():
             if item.room_number == current_room:
                 print(item.long_description)
 
+        # Check to see if Butch, the large enemy of the game to wake up from the closet
+        check_if_butch_wake_up = random.randrange(0, 101)
+        if check_if_butch_wake_up < does_butch_wake_up:
+            butch_woken = True
+
         print()
         print("You can type 'H' or 'help' for a full instruction of commands.")
         print()
+        if butch_woken:
+            print("Butch has woken up! Beware!")
         user_command = str(input("What would you like to do? "))
         command_words_list = user_command.split(" ")
 
@@ -454,6 +473,8 @@ def main():
                             atk_dmg = random.randrange(3, 10)
                             current_hp -= atk_dmg
                             print(f"The bear attacked you a dealt {atk_dmg} damage!")
+
+        does_butch_wake_up += 100
 
 
 """
