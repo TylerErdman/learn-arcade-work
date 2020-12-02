@@ -39,16 +39,6 @@ class Enemy:
         self.room_number = room_number
 
 
-class EnemyMan:
-    """Defines the Class for the Big enemy"""
-
-    def __init__(self, name, hp, attack, current_room):
-        self.name = name
-        self.hp = hp
-        self.attack = attack
-        self.current_room = current_room
-
-
 def main():
     """This is the main function that all actions fall under"""
     # Creating a list to store rooms
@@ -155,6 +145,7 @@ def main():
 
     item_list = []
 
+    # Creating all of the items and adding them to the item list
     item = Item(5, "A short dull butter knife on the counter, good for spreading jam.", "Knife")
     item_list.append(item)
 
@@ -176,15 +167,19 @@ def main():
     item = Item(16, "A bloody cleaver stuck inside a block of wood.", "Cleaver")
     item_list.append(item)
 
-    # Creating the enemies to fight
+    item = Item(1, "A gleam in the murky water of the toilet bowl looks like a coin", "Coin")
+    item_list.append(item)
+
+    # Creating the enemies
     enemy_bear = Enemy("Bear", 50, random.randrange(4, 12), 17)
-    enemy_butch = EnemyMan("Butch", 100, random.randrange(5, 15), 8)
+    enemy_butch = Enemy("Butch", 100, random.randrange(5, 15), 8)
 
     # Loading my sounds for combat
     player_got_hurt_sound = arcade.load_sound("hurt1.wav")
 
     enemy_got_hurt_sound = arcade.load_sound("hurt3.wav")
 
+    # All of the variables used in the game
     current_room = 0
     done = False
     current_hp = 100
@@ -194,7 +189,9 @@ def main():
     butch_path_pos = 0
     butch_dead = False
     girl_saved = False
+    times_coin_picked_up = 0
 
+    # The text when the game begins
     print()
     print("Welcome to the House of Horror!")
     print()
@@ -212,6 +209,7 @@ def main():
         # If there is an item in the room print it
         for item in item_list:
             if item.room_number == current_room:
+                print()
                 print(item.long_description)
 
         # Check to see if Butch, the large enemy of the game to wake up from the closet
@@ -223,9 +221,12 @@ def main():
         print("You can type 'H' or 'help' for a full instruction of commands.")
         print()
 
+        # Adding to the girl
         if girl_saved:
-            print("You have a scared girl with you.")
+            print("You have a scared girl with you."
+                  "\nShe is urging you to get out of the house.")
             print()
+        # As long as he isn't dead, notify if he's awake
         if butch_woken and butch_dead is False:
             print("Butch has woken up! Beware!")
             print()
@@ -285,6 +286,7 @@ def main():
             for item in item_list:
                 if item.short_name.upper() == command_words_list[1].upper() and item.room_number == current_room:
                     item.room_number = -1
+                    print(f"You grabbed the {item.short_name}.")
                     if item.short_name.upper() == "BOOK" and room_list[4].east != 13:
                         print("You hear a shifting and the bookcase slides out of the way"
                               " revealing stairs to the east.")
@@ -295,6 +297,13 @@ def main():
                                                     "\nThere the a doorway to the west leading to the foyer."
                                                     "\nThe bookcase has now moved out of the way "
                                                     "and reveals stairs to the east.")
+                    if item.short_name.upper() == "COIN" and times_coin_picked_up == 0:
+                        print("You reach into the murky water."
+                              "\nThe smell of sewage fills your nostrils."
+                              "\nYou finally got the coin after some digging around."
+                              "\nIt's just a penny.")
+                        item_list[7].long_description = "An oddly shiny penny on the floor."
+                        times_coin_picked_up += 1
 
         # This command chain handles the inventory command
         if command_words_list[0].upper() == "INVENTORY" or command_words_list[0].upper() == "INV":
@@ -548,6 +557,12 @@ def main():
                         fight_bear = False
                     print()
                     print(f"You have {current_hp} hit points left!")
+                    if current_hp <= 0:
+                        print()
+                        print("You are at 0 HP!")
+                        print("Game Over!")
+                        fight_bear = False
+                        done = True
 
         if not butch_dead:
             does_butch_wake_up += 4
@@ -710,6 +725,13 @@ def main():
                             butch_fight = False
                         print()
                         print(f"You have {current_hp} hit points left!")
+
+                        if current_hp <= 0:
+                            print()
+                            print("You are at 0 HP!")
+                            print("Game Over!")
+                            butch_fight = False
+                            done = True
 
 
 if __name__ == "__main__":
