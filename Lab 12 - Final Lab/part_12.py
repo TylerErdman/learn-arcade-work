@@ -164,7 +164,7 @@ def main():
     item = Item(4, "A book that reads 'How to be an efficient cannibal'.", "Book")
     item_list.append(item)
 
-    item = Item(12, "A key on a hook, it looks to be like the skeleton variety.", "Key")
+    item = Item(-2, "A key, it looks to be like the skeleton variety.", "Key")
     item_list.append(item)
 
     item = Item(5, "There are a few pieces of questionable food in the refrigerator", "Food")
@@ -187,6 +187,9 @@ def main():
     current_hp = 100
     does_butch_wake_up = 0
     butch_woken = False
+    butch_path = [10, 9, 11, 13, 9, 3, 2, 5, 7, 8, 7, 5, 2, 3, 5, 13, 15, 16, 15, 13, 4, 3, 9, 10]
+    butch_path_pos = 0
+    butch_dead = False
 
     print("Welcome to the House of Horror")
     print()
@@ -354,6 +357,7 @@ def main():
                       "\nIt has very vivid descriptions about how to catch people and butcher them."
                       "\nYou decide to stop reading.")
 
+            """
             if command_words_list[1].upper() == "KNIFE" and item_list[0].room_number == -1:
                 if current_room == 17:
                     print("You attempt to stab the bear with the small dull knife")
@@ -372,6 +376,7 @@ def main():
                     done = True
                 else:
                     print("Not sure what you want to do with that.")
+            """
 
         if command_words_list[0].upper() == "H" or command_words_list[0].upper() == "HELP":
             print()
@@ -400,13 +405,6 @@ def main():
                     and current_room == enemy_bear.room_number and enemy_bear.hp >= 0:
                 fight_bear = True
                 while fight_bear:
-                    if enemy_bear.hp <= 0:
-                        print("You killed the bear!")
-                        room_list[17].description = ("You stand in a chamber. There is the hallway to the west."
-                                                     "\nThe cave opening to the south. There is a dead bear.")
-                        room_list[17].south = 19
-                        enemy_bear.room_number = -2
-                        fight_bear = False
                     print()
                     print("You are currently in a fight with the bear!")
                     print()
@@ -424,10 +422,18 @@ def main():
                         print("You can type 'd' or 'dodge', the enemy attack has a greater chance not to hit you.")
                         print()
                         print("To win a fight you must bring the bear's hp down to 0.")
+                        print()
+                        print("You can type 'q' or 'quit' to exit the game!")
+
+                    if command_words_list[0].upper() == "Q" or command_words_list[0].upper() == "QUIT":
+                        print()
+                        print("Thanks for playing!")
+                        fight_bear = False
+                        done = True
 
                     if command_words_list[0].upper() == "ATK" or command_words_list[0].upper() == "ATTACK":
                         chance_to_hit = random.randrange(1, 21)
-                        if chance_to_hit > 13:
+                        if chance_to_hit > 10:
 
                             if item_list[6].room_number == -1:
                                 print("You attacked with the cleaver!")
@@ -443,7 +449,7 @@ def main():
                                 print(f"You dealt {atk_dmg} to the bear!")
                             else:
                                 print("You attacked with a punch!")
-                                atk_dmg = random.randrange(1, 7)
+                                atk_dmg = random.randrange(200, 1000)
                                 enemy_bear.hp -= atk_dmg
                                 print(f"The dealt {atk_dmg} to the bear!")
                                 arcade.play_sound(enemy_got_hurt_sound)
@@ -472,9 +478,155 @@ def main():
                             print("The bear attacked you!")
                             atk_dmg = random.randrange(3, 10)
                             current_hp -= atk_dmg
-                            print(f"The bear attacked you a dealt {atk_dmg} damage!")
+                            print(f"The bear attacked you and dealt {atk_dmg} damage!")
+                    if enemy_bear.hp <= 0:
+                        print("You killed the bear!")
+                        room_list[17].description = ("You stand in a chamber. There is the hallway to the west."
+                                                     "\nThe cave opening to the south. There is a dead bear.")
+                        room_list[17].south = 19
+                        enemy_bear.room_number = -2
+                        fight_bear = False
 
-        does_butch_wake_up += 100
+        if not butch_dead:
+            does_butch_wake_up += 100
+            if butch_woken:
+
+                butch_path_pos += 1
+                print("You can hear clunking of footsteps in the house!"
+                      "\nYou are not alone!")
+                if butch_path_pos > len(butch_path) - 1:
+                    butch_path_pos = 0
+                enemy_butch.room_number = butch_path[butch_path_pos]
+
+                if enemy_butch.room_number == current_room:
+                    # Initiate combat!
+                    print()
+                    print("Butch has finally caught up to you!")
+                    butch_fight = True
+
+                    # This while loop handles the fight with butch!
+                    while butch_fight:
+                        print()
+                        print("You are in a fight with Butch!")
+                        print()
+                        print("You can type 'h' or 'help' for a list of commands!")
+                        print()
+                        user_command = str(input("What would you like to do? "))
+                        command_words_list = user_command.split(" ")
+
+                        if command_words_list[0].upper() == "H" or command_words_list[0].upper() == "HELP":
+                            print("In a fight you can type 'atk' or 'attack' "
+                                  "and the game will by default use your best weapon.")
+                            print()
+                            print("You can type 'run' or 'r', followed by a direction "
+                                  "and you'll have a chance to escape!"
+                                  "\nAn example would be 'r' 'south' and "
+                                  "if possible you would escape to a southern room.")
+                            print()
+                            print("You can type 'd' or 'dodge', the enemy attack might not hit you.")
+                            print()
+                            print("Once you kill an enemy they might leave something behind.")
+                            print()
+                            print("You can type 'q' or 'quit' to exit the game.")
+
+                        if command_words_list[0].upper() == "Q" or command_words_list[0].upper() == "QUIT":
+                            print()
+                            print("Thanks for playing!")
+                            butch_fight = False
+                            done = True
+
+                        if command_words_list[0].upper() == "ATK" or command_words_list[0].upper() == "ATTACK":
+                            if item_list[6].room_number == -1:
+                                print("You attacked with the cleaver!")
+                                enemy_butch.hp -= random.randrange(10, 15)
+                            elif item_list[0].room_number == -1:
+                                print("You attacked with the butter knife!")
+                                enemy_butch.hp -= random.randrange(5, 11)
+                            else:
+                                print("You attacked with a punch.")
+                                enemy_butch.hp -= random.randrange(1, 7)
+
+                        if command_words_list[0].upper() == "RUN" or command_words_list[0].upper() == "R":
+                            run = random.randrange(1, 21)
+
+                            if len(command_words_list) == 1:
+
+                                if run >= 10:
+                                    print("You ran away")
+
+                                    current_room -= 1
+                                else:
+                                    print("You tried to run away but it failed!")
+                            if len(command_words_list) == 2 and run >= 10:
+                                butch_fight = False
+                                if command_words_list[1].upper() == "N" or command_words_list[1].upper() == "NORTH":
+                                    next_room = room_list[current_room].north
+                                    if next_room is None:
+                                        print("You can't go that way")
+                                    else:
+                                        current_room = next_room
+                                elif command_words_list[1].upper() == "S" or command_words_list[1].upper() == "SOUTH":
+                                    next_room = room_list[current_room].south
+                                    if next_room is None:
+                                        print("You can't go that way")
+                                    else:
+                                        current_room = next_room
+                                elif command_words_list[1].upper() == "E" or command_words_list[1].upper() == "EAST":
+                                    next_room = room_list[current_room].east
+                                    if next_room is None:
+                                        print("You can't go that way")
+                                    else:
+                                        current_room = next_room
+                                elif command_words_list[1].upper() == "W" or command_words_list[1].upper() == "WEST":
+                                    next_room = room_list[current_room].west
+                                    if next_room is None:
+                                        print("You can't go that way")
+                                    else:
+                                        current_room = next_room
+                                elif command_words_list[1].upper() == "U" or command_words_list[1].upper() == "UP":
+                                    next_room = room_list[current_room].up
+                                    if next_room is None:
+                                        print("You can't go that way")
+                                    else:
+                                        current_room = next_room
+                                elif command_words_list[1].upper() == "D" or command_words_list[1].upper() == "DOWN":
+                                    next_room = room_list[current_room].down
+                                    if next_room is None:
+                                        print("You can't go that way")
+                                    else:
+                                        current_room = next_room
+                                else:
+                                    print()
+                                    print("I don't understand that.")
+
+                        # This next block handles dodging and Butch's attack
+                        chance_to_hit = random.randrange(1, 21)
+                        if chance_to_hit > 10:
+                            if command_words_list[0].upper() == "D" or command_words_list[0].upper() == "Dodge":
+                                if chance_to_hit > 15:
+                                    print("Butch attacked you!")
+                                    current_hp -= random.randrange(2, 10)
+                                    arcade.play_sound(player_got_hurt_sound)
+                                elif chance_to_hit <= 15:
+                                    print("Butch tried to attack you but missed!")
+                            else:
+                                print("Butch attacked you!")
+                                atk_dmg = random.randrange(3, 10)
+                                current_hp -= atk_dmg
+                                print(f"Butch attacked you and dealt {atk_dmg} damage!")
+                        else:
+                            print("Butch tried to attack you but missed!")
+
+                        if enemy_butch.hp <= 0:
+                            print("You have defeated Butch!"
+                                  "\nHis body slowly dissolves until there's nothing left."
+                                  "\nYou wonder what kind of monster he was..."
+                                  "\nThere is now a key on the floor.")
+                            item_list[4].room_number = current_room
+                            butch_woken = False
+                            enemy_butch.room_number = -2
+                            butch_dead = True
+                            butch_fight = False
 
 
 """
