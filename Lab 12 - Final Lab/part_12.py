@@ -132,7 +132,7 @@ def main():
     room = Room("You're in a large stone hallway. You can hear water dripping."
                 "\nThere are doors on the east and west walls"
                 "\nThe west door is locked."
-                "\nThe door to the south leads to the chamber.", None, 13, None, 17, None, None)
+                "\nThe door to the south leads to the chamber.", None, 13, 16, None, None, None)
     room_list.append(room)
 
     room = Room("The room is very dark and damp. You see a large metal table in the center covered with blood."
@@ -195,7 +195,8 @@ def main():
     butch_dead = False
     girl_saved = False
 
-    print("Welcome to the House of Horror")
+    print()
+    print("Welcome to the House of Horror!")
     print()
     print("You were walking on the street when you heard screams coming from inside the house.")
     print("Rushing into the house you shut the front door behind you.")
@@ -400,7 +401,7 @@ def main():
                         if item_list[0].room_number == -1 or item_list[6].room_number == -1:
                             print("You cut the girl free."
                                   "\nShe is now with you.")
-                            room_list[5].description = ("You stand in a cold freezer with "
+                            room_list[6].description = ("You stand in a cold freezer with "
                                                         "bodies swinging back and forth."
                                                         "\nThe only exit is south back to the kitchen.")
                             girl_saved = True
@@ -411,7 +412,7 @@ def main():
                     if item_list[0].room_number == -1 or item_list[6].room_number == -1:
                         print("You cut the girl free."
                               "\nShe is now with you.")
-                        room_list[5].description = ("You stand in a cold freezer with bodies swinging back and forth."
+                        room_list[6].description = ("You stand in a cold freezer with bodies swinging back and forth."
                                                     "\nThe only exit is south back to the kitchen.")
                         girl_saved = True
             else:
@@ -434,6 +435,10 @@ def main():
             print("You can type 'fight [enemy]' to start a fight.")
             print()
             print("You can type 'Q' or 'QUIT' to quit and end the game.")
+
+        if command_words_list[0].upper() == "HP" or command_words_list[0].upper() == "HIT POINTS":
+            print()
+            print(f"You have {current_hp} hit points left.")
 
         # When you when the game and escape
         if current_room == 19:
@@ -532,6 +537,7 @@ def main():
                             print("The bear attacked you!")
                             atk_dmg = random.randrange(3, 10)
                             current_hp -= atk_dmg
+                            arcade.play_sound(enemy_got_hurt_sound)
                             print(f"The bear attacked you and dealt {atk_dmg} damage!")
                     if enemy_bear.hp <= 0:
                         print("You killed the bear!")
@@ -540,6 +546,8 @@ def main():
                         room_list[17].south = 19
                         enemy_bear.room_number = -2
                         fight_bear = False
+                    print()
+                    print(f"You have {current_hp} hit points left!")
 
         if not butch_dead:
             does_butch_wake_up += 4
@@ -597,20 +605,20 @@ def main():
                                 if item_list[6].room_number == -1:
                                     print("You attacked with the cleaver!")
                                     atk_dmg = random.randrange(10, 15)
-                                    enemy_bear.hp -= atk_dmg
+                                    enemy_butch.hp -= atk_dmg
                                     arcade.play_sound(enemy_got_hurt_sound)
-                                    print(f"You dealt {atk_dmg} to the bear!")
+                                    print(f"You dealt {atk_dmg} to Butch!")
                                 elif item_list[0].room_number == -1:
                                     print("You attacked with the butter knife!")
                                     atk_dmg = random.randrange(5, 11)
-                                    enemy_bear.hp -= atk_dmg
+                                    enemy_butch.hp -= atk_dmg
                                     arcade.play_sound(enemy_got_hurt_sound)
-                                    print(f"You dealt {atk_dmg} to the bear!")
+                                    print(f"You dealt {atk_dmg} to Butch!")
                                 else:
                                     print("You attacked with a punch!")
                                     atk_dmg = random.randrange(2, 7)
-                                    enemy_bear.hp -= atk_dmg
-                                    print(f"The dealt {atk_dmg} to the bear!")
+                                    enemy_butch.hp -= atk_dmg
+                                    print(f"The dealt {atk_dmg} to Butch!")
                                     arcade.play_sound(enemy_got_hurt_sound)
                             else:
                                 print("You attacked and missed!")
@@ -700,6 +708,8 @@ def main():
                             enemy_butch.room_number = -2
                             butch_dead = True
                             butch_fight = False
+                        print()
+                        print(f"You have {current_hp} hit points left!")
 
 
 if __name__ == "__main__":
