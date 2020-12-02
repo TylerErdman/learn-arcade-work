@@ -7,7 +7,7 @@ def ask_the_user():
     # Split the user_command into a list the computer can process.
     command_words = user_commands.split(" ")
 
-    print(command_words)
+    return command_words
 
 
 ask_the_user()
